@@ -9,6 +9,7 @@ float anim_dt = 0.25f;
 player_t player = {
     .pos = VEC2F(0, 0),
     .size = VEC2F(100, 100),
+    .last_velocity = VEC2F(0, 0),
     .velocity = VEC2F(0, 0),
     .move_speed = 100.0f,
     .anim_state = PLAYER_ANIM_IDLE0,
@@ -30,15 +31,19 @@ void update_player() {
     player.velocity = VEC2F(0, 0);
     if (is_key_down(KEY_LETTER_W)) {
         player.velocity.y = -player.move_speed;
+        player.last_velocity = player.velocity;
     }
     if (is_key_down(KEY_LETTER_S)) {
         player.velocity.y = player.move_speed;
+        player.last_velocity = player.velocity;
     }
     if (is_key_down(KEY_LETTER_A)) {
         player.velocity.x = -player.move_speed;
+        player.last_velocity = player.velocity;
     }
     if (is_key_down(KEY_LETTER_D)) {
         player.velocity.x = player.move_speed;
+        player.last_velocity = player.velocity;
     }
 
     // Update Position
@@ -47,11 +52,13 @@ void update_player() {
 }
 
 void draw_player() {
+    vec2f pivot = VEC2F(player.size.x * 0.25f, player.size.y * 0.25f);
+    vec3f rotation = (((player.velocity.x == 0.0f) ? player.last_velocity.x : player.velocity.x) > 0.0f) ? VEC3F(0, 0, 0) : VEC3F(0, 180, 0);
     if (player.anim_state == PLAYER_ANIM_IDLE0) {
         texture *player_texture = player.has_weapon ? get_texture(TEXTURE_PLAYER_GUN_IDLE0) : get_texture(TEXTURE_PLAYER_IDLE0);
-        draw_texture2D(player_texture, player.pos, player.size, WHITE, 0);
+        draw_texture2D(player_texture, player.pos, player.size, WHITE, rotation, pivot);
     } else {
         texture *player_texture = player.has_weapon ? get_texture(TEXTURE_PLAYER_GUN_IDLE1) : get_texture(TEXTURE_PLAYER_IDLE1);
-        draw_texture2D(player_texture, player.pos, player.size, WHITE, 0);
+        draw_texture2D(player_texture, player.pos, player.size, WHITE, rotation, pivot);
     }
 }

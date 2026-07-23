@@ -11,6 +11,7 @@ enum {
 typedef struct {
     vec2f pos;
     vec2f size;
+    vec2f last_velocity;
     vec2f velocity;
     float move_speed;
     int anim_state;
