@@ -16,7 +16,8 @@ int main(void) {
     init_player();
     init_levels();
 
-    while (!window_should_close()) {
+    while (!window_should_close())
+    {
         update();
 
         update_player(cur_level);

@@ -23,10 +23,9 @@ player_t player = {
     .has_weapon = true,
     .ground = false
 };
+// clang-format on
 
-void init_player() {
-    anim_timer = get_time();
-}
+void init_player() { anim_timer = get_time(); }
 
 void move_and_collide(tilemap *map) {
     float dt = get_dt();
