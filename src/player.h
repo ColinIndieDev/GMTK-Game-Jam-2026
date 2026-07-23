@@ -2,11 +2,13 @@
 
 #include <cpl/cpl.h>
 
+// clang-format off
 enum {
     PLAYER_ANIM_IDLE0 = 0,
     PLAYER_ANIM_IDLE1,
     TOTAL_PLAYER_ANIM_STATES
 };
+// clang-format on
 
 typedef struct {
     vec2f pos;

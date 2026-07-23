@@ -2,8 +2,7 @@
 
 #include <cpl/cpl.h>
 
-enum
-{
+enum {
     TEXTURE_RIFLE = 0,
     TEXTURE_BULLET,
     TEXTURE_PLAYER_IDLE0,

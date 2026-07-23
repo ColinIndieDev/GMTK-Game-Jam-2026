@@ -15,16 +15,13 @@ char *texture_paths[TOTAL_TEXTURES] = {
     "assets/images/walking/walking_3.png",
 };
 
-void init_textures()
-{
-    for (uint32_t i = 0; i < TOTAL_TEXTURES; i++)
-    {
+void init_textures() {
+    for (uint32_t i = 0; i < TOTAL_TEXTURES; i++) {
         texture_load(&textures[i], texture_paths[i], FILTER_NEAREST);
     }
 }
 
-texture *get_texture(int id)
-{
+texture *get_texture(int id) {
     assert(id >= 0 && id < TOTAL_TEXTURES);
     return &textures[id];
 }
