@@ -111,6 +111,9 @@ endif()
 
 add_executable(${CMAKE_PROJECT_NAME}
     src/main.c
+    
+    src/player.c
+    src/textures.c
 )
 
 # ===== (LINKING) LIBRARIES =====
