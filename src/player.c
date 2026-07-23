@@ -6,6 +6,7 @@
 float anim_timer = 0.0f;
 float anim_dt = 0.25f;
 
+// clang-format off
 player_t player = {
     .pos = VEC2F(0, 0),
     .size = VEC2F(100, 100),
@@ -15,10 +16,9 @@ player_t player = {
     .anim_state = PLAYER_ANIM_IDLE0,
     .has_weapon = false
 };
+// clang-format on
 
-void init_player() {
-    anim_timer = get_time();
-}
+void init_player() { anim_timer = get_time(); }
 
 void update_player() {
     // Update Animation

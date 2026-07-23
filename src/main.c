@@ -4,7 +4,8 @@
 #include "textures.h"
 #include "player.h"
 
-int main(void) {
+int main(void)
+{
     window_init(800, 800, "GMTK Game", OPENGL_VER_3_3);
     font f;
     font_load(&f, "assets/fonts/default.ttf", "default", FILTER_NEAREST);
@@ -12,7 +13,8 @@ int main(void) {
     init_textures();
     init_player();
 
-    while (!window_should_close()) {
+    while (!window_should_close())
+    {
         update();
 
         update_player();

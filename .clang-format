@@ -1,0 +1,6 @@
+BasedOnStyle: LLVM
+PointerAlignment: Right
+BreakBeforeBraces: Attach
+IndentWidth: 4
+Cpp11BracedListStyle: false
+ColumnLimit: 150
