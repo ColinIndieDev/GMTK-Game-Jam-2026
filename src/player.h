@@ -13,13 +13,16 @@ enum {
 typedef struct {
     vec2f pos;
     vec2f size;
-    vec2f last_velocity;
+    vec2f collider_size;
     vec2f velocity;
+    float collider_pos_off_x;
+    int last_dir_x;
     float move_speed;
     int anim_state;
     bool has_weapon;
+    bool ground;
 } player_t;
 
 void init_player();
-void update_player();
+void update_player(int level);
 void draw_player();

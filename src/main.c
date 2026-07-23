@@ -1,8 +1,10 @@
 #define CPL_IMPL
 #include <cpl/cpl.h>
 
-#include "player.h"
+#include "map.h"
 #include "textures.h"
+
+int cur_level = LEVEL_0;
 
 int main(void) {
     window_init(800, 800, "GMTK Game", OPENGL_VER_3_3);
@@ -11,15 +13,17 @@ int main(void) {
 
     init_textures();
     init_player();
+    init_levels();
 
     while (!window_should_close()) {
         update();
 
-        update_player();
+        update_player(cur_level);
 
-        clear_background(GREEN);
-        begin_draw(TEXTURE_2D_UNLIT, false);
+        clear_background(LIGHT_GRAY);
+        begin_draw(TEXTURE_2D_UNLIT, true);
 
+        draw_level(cur_level);
         draw_player();
 
         end_frame();
