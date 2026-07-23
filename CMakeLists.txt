@@ -114,6 +114,7 @@ add_executable(${CMAKE_PROJECT_NAME}
     
     src/player.c
     src/textures.c
+    src/map.c
 )
 
 # ===== (LINKING) LIBRARIES =====
