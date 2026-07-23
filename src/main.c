@@ -2,6 +2,7 @@
 #include <cpl/cpl.h>
 
 #include "map.h"
+#include "player.h"
 #include "textures.h"
 
 int cur_level = LEVEL_0;
