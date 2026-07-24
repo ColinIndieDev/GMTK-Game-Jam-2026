@@ -6,7 +6,7 @@
 
 enum {
     LEVEL_0 = 0,
-    TOTAL_LEVELS
+    TOTAL_LEVELS,
 };
 
 void init_levels();

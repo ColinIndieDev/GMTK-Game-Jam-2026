@@ -7,7 +7,7 @@
 tilemap level_maps[TOTAL_LEVELS];
 
 const char *level_data_paths[TOTAL_LEVELS] = {
-    "levels/level0.txt"
+    "levels/level0.txt",
 };
 
 void load_level_data(int level) {
@@ -41,9 +41,9 @@ void build_level_map(int level) {
             VEC2F(tile_pos.x - TILE_SIZE, tile_pos.y), // LEFT
             VEC2F(tile_pos.x + TILE_SIZE, tile_pos.y), // RIGHT
             VEC2F(tile_pos.x, tile_pos.y - TILE_SIZE), // UP
-            VEC2F(tile_pos.x, tile_pos.y + TILE_SIZE) // DOWN
+            VEC2F(tile_pos.x, tile_pos.y + TILE_SIZE), // DOWN
         };
-        
+
         bool left = tilemap_tile_exists(map, VEC2F(tile_pos.x - TILE_SIZE, tile_pos.y));
         bool right = tilemap_tile_exists(map, VEC2F(tile_pos.x + TILE_SIZE, tile_pos.y));
         bool up = tilemap_tile_exists(map, VEC2F(tile_pos.x, tile_pos.y - TILE_SIZE));
@@ -90,10 +90,6 @@ void init_levels() {
     build_level_map(LEVEL_0);
 }
 
-tilemap *get_level_tilemap(int level) {
-    return &level_maps[level];
-}
+tilemap *get_level_tilemap(int level) { return &level_maps[level]; }
 
-void draw_level(int level) {
-    tilemap_draw(&level_maps[level], WHITE);
-}
+void draw_level(int level) { tilemap_draw(&level_maps[level], WHITE); }

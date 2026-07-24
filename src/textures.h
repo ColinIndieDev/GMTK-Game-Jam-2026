@@ -2,19 +2,22 @@
 
 #include <cpl/cpl.h>
 
+#define MAX_FRAMES_SPRITE_SHEET 8
+
 enum {
-    TEXTURE_RIFLE = 0,
-    TEXTURE_BULLET,
-    TEXTURE_PLAYER_IDLE0,
-    TEXTURE_PLAYER_IDLE1,
-    TEXTURE_PLAYER_GUN_IDLE0,
-    TEXTURE_PLAYER_GUN_IDLE1,
-    TEXTURE_PLAYER_WALK0,
-    TEXTURE_PLAYER_WALK1,
-    TEXTURE_PLAYER_WALK2,
-    TEXTURE_PLAYER_WALK3,
-    TOTAL_TEXTURES
+    SPRITE_SHEET_RIFLE = 0,
+    SPRITE_SHEET_BULLET,
+    SPRITE_SHEET_PLAYER_IDLE,
+    SPRITE_SHEET_PLAYER_GUN_IDLE,
+    SPRITE_SHEET_PLAYER_WALK,
+    TOTAL_SPRITE_SHEETS,
 };
 
+typedef struct {
+    int count;
+    texture textures[MAX_FRAMES_SPRITE_SHEET];
+    const char *files[MAX_FRAMES_SPRITE_SHEET];
+} SpriteSheet;
+
 void init_textures();
-texture *get_texture(int id);
+SpriteSheet *get_sprite_sheet(int id);

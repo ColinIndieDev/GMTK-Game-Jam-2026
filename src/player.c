@@ -16,14 +16,14 @@ player_t player = {
     .size = VEC2F(100, 100),
     .collider_size = VEC2F(22, 92),
     .velocity = VEC2F(0, 0),
-    .collider_pos_off_x = 14.0f, 
+    .collider_pos_off_x = 14.0f,
     .last_dir_x = 1,
     .move_speed = 100.0f,
-    .anim_state = PLAYER_ANIM_IDLE0,
+    .sprite_sheet = SPRITE_SHEET_PLAYER_IDLE,
+    .sprite_idx = 0,
     .has_weapon = true,
-    .ground = false
+    .ground = false,
 };
-// clang-format on
 
 void init_player() { anim_timer = get_time(); }
 
@@ -42,13 +42,18 @@ void move_and_collide(tilemap *map) {
 
         vec2f tile_pos = VEC2F(map->renderer.vertices[(uint64_t)t * 6].x, map->renderer.vertices[(uint64_t)t * 6].y);
 
-        if (player.pos.y + player.collider_size.y <= tile_pos.y ||
-            player.pos.y >= tile_pos.y + TILE_SIZE) {
+        if (player.pos.y + player.collider_size.y <= tile_pos.y || player.pos.y >= tile_pos.y + TILE_SIZE) {
             continue;
         }
 
-        rect_collider player_collider = {.pos = player_pos, .size = player.collider_size};
-        rect_collider tile_collider = {.pos = tile_pos, .size = VEC2F(TILE_SIZE, TILE_SIZE)};
+        rect_collider player_collider = {
+            .pos = player_pos,
+            .size = player.collider_size,
+        };
+        rect_collider tile_collider = {
+            .pos = tile_pos,
+            .size = VEC2F(TILE_SIZE, TILE_SIZE),
+        };
 
         if (check_collision_rects(player_collider, tile_collider)) {
             if (player.velocity.x > 0) {
@@ -72,13 +77,18 @@ void move_and_collide(tilemap *map) {
 
         vec2f tile_pos = VEC2F(map->renderer.vertices[(uint64_t)t * 6].x, map->renderer.vertices[(uint64_t)t * 6].y);
 
-        if (player_pos.x + player.collider_size.x <= tile_pos.x ||
-            player_pos.x >= tile_pos.x + TILE_SIZE) {
+        if (player_pos.x + player.collider_size.x <= tile_pos.x || player_pos.x >= tile_pos.x + TILE_SIZE) {
             continue;
         }
 
-        rect_collider player_collider = {.pos = player_pos, .size = player.collider_size};
-        rect_collider tile_collider = {.pos = tile_pos, .size = VEC2F(TILE_SIZE, TILE_SIZE)};
+        rect_collider player_collider = {
+            .pos = player_pos,
+            .size = player.collider_size,
+        };
+        rect_collider tile_collider = {
+            .pos = tile_pos,
+            .size = VEC2F(TILE_SIZE, TILE_SIZE),
+        };
 
         if (check_collision_rects(player_collider, tile_collider)) {
             if (player.velocity.y > 0) {
@@ -95,7 +105,7 @@ void move_and_collide(tilemap *map) {
 void update_player(int level) {
     // Update Animation
     if (anim_timer + anim_dt <= get_time()) {
-        player.anim_state = (player.anim_state + 1) % TOTAL_PLAYER_ANIM_STATES;
+        player.sprite_idx = (player.sprite_idx + 1) % get_sprite_sheet(player.sprite_sheet)->count;
         anim_timer = get_time();
     }
 
@@ -129,12 +139,6 @@ void update_player(int level) {
 void draw_player() {
     vec2f pivot = VEC2F(player.size.x * 0.25f, player.size.y * 0.25f);
     vec3f rotation = (player.last_dir_x > 0) ? VEC3F(0, 0, 0) : VEC3F(0, 180, 0);
-    if (player.anim_state == PLAYER_ANIM_IDLE0) {
-        texture *player_texture = player.has_weapon ? get_texture(TEXTURE_PLAYER_GUN_IDLE0) : get_texture(TEXTURE_PLAYER_IDLE0);
-        draw_texture2D(player_texture, player.pos, player.size, WHITE, rotation, pivot);
-    } else {
-        texture *player_texture = player.has_weapon ? get_texture(TEXTURE_PLAYER_GUN_IDLE1) : get_texture(TEXTURE_PLAYER_IDLE1);
-        draw_texture2D(player_texture, player.pos, player.size, WHITE, rotation, pivot);
-    }
-
+    texture *player_texture = &get_sprite_sheet(player.sprite_sheet)->textures[player.sprite_idx];
+    draw_texture2D(player_texture, player.pos, player.size, WHITE, rotation, pivot);
 }

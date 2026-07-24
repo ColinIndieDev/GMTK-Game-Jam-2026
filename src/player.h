@@ -2,14 +2,6 @@
 
 #include <cpl/cpl.h>
 
-// clang-format off
-enum {
-    PLAYER_ANIM_IDLE0 = 0,
-    PLAYER_ANIM_IDLE1,
-    TOTAL_PLAYER_ANIM_STATES
-};
-// clang-format on
-
 typedef struct {
     vec2f pos;
     vec2f size;
@@ -18,7 +10,8 @@ typedef struct {
     float collider_pos_off_x;
     int last_dir_x;
     float move_speed;
-    int anim_state;
+    int sprite_sheet;
+    int sprite_idx;
     bool has_weapon;
     bool ground;
 } player_t;
