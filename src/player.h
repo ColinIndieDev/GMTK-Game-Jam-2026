@@ -19,3 +19,5 @@ typedef struct {
 void init_player();
 void update_player(int level);
 void draw_player();
+void show_gun_player();
+void hide_gun_player();

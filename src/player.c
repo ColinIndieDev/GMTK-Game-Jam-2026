@@ -127,6 +127,15 @@ void update_player(int level) {
         player.ground = false;
     }
 
+    // toggle player's gun with "g" key
+    if (is_key_pressed(KEY_LETTER_G)) {
+        if (player.has_weapon) {
+            hide_gun_player();
+        } else {
+            show_gun_player();
+        }
+    }
+
     player.velocity.y += GRAVITY_FORCE * get_dt();
     if (player.velocity.y > MAX_FALL_SPEED) {
         player.velocity.y = MAX_FALL_SPEED;
@@ -141,4 +150,16 @@ void draw_player() {
     vec3f rotation = (player.last_dir_x > 0) ? VEC3F(0, 0, 0) : VEC3F(0, 180, 0);
     texture *player_texture = &get_sprite_sheet(player.sprite_sheet)->textures[player.sprite_idx];
     draw_texture2D(player_texture, player.pos, player.size, WHITE, rotation, pivot);
+}
+
+void show_gun_player() {
+    player.has_weapon = true;
+    player.sprite_idx = 0;
+    player.sprite_sheet = SPRITE_SHEET_PLAYER_GUN_IDLE;
+}
+
+void hide_gun_player() {
+    player.has_weapon = false;
+    player.sprite_idx = 0;
+    player.sprite_sheet = SPRITE_SHEET_PLAYER_IDLE;
 }
