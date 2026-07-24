@@ -10,6 +10,7 @@ enum {
     SPRITE_SHEET_PLAYER_IDLE,
     SPRITE_SHEET_PLAYER_GUN_IDLE,
     SPRITE_SHEET_PLAYER_WALK,
+    SPRITE_SHEET_POLICE_BATON_IDLE,
     TOTAL_SPRITE_SHEETS,
 };
 
@@ -17,7 +18,7 @@ typedef struct {
     int count;
     texture textures[MAX_FRAMES_SPRITE_SHEET];
     const char *files[MAX_FRAMES_SPRITE_SHEET];
-} SpriteSheet;
+} sprite_sheet_t;
 
 void init_textures();
-SpriteSheet *get_sprite_sheet(int id);
+sprite_sheet_t *get_sprite_sheet(int id);

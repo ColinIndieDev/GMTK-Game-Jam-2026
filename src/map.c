@@ -52,6 +52,10 @@ void build_level_map(int level) {
         vec2f uv = VEC2F(0, 0);
         if (left && right) {
             uv = VEC2F(1, 0);
+        } else if (down) { 
+            uv = VEC2F(2, 1);
+        } else if (up) {
+            uv = VEC2F(2, 0);
         } else if (right) {
             uv = VEC2F(0, 1);
         } else if (left) {

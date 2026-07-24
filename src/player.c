@@ -2,14 +2,17 @@
 #include "textures.h"
 #include "map.h"
 #include <cpl/cpl.h>
-#include <cpstd/mathplus.h>
+
+#include <cpstd/vector.h>
 
 float anim_timer = 0.0f;
 float anim_dt = 0.25f;
 
-#define GRAVITY_FORCE 900.0f
-#define MAX_FALL_SPEED 1100.0f
-#define JUMP_FORCE 450.0f
+bool reloading = false;
+float reload_timer = 0.0f;
+float reload_dt = 3.0f;
+
+bullet_t *bullets = NULL;
 
 player_t player = {
     .pos = VEC2F(0, 0),
@@ -21,11 +24,16 @@ player_t player = {
     .move_speed = 100.0f,
     .sprite_sheet = SPRITE_SHEET_PLAYER_IDLE,
     .sprite_idx = 0,
-    .has_weapon = true,
+    .ammo_loaded = MAX_AMMO,
+    .ammo_stored = 7,
+    .has_weapon = false,
     .ground = false,
 };
 
-void init_player() { anim_timer = get_time(); }
+void init_player() { 
+    anim_timer = get_time(); 
+    bullets = vec_init(bullets, 100);
+}
 
 void move_and_collide(tilemap *map) {
     float dt = get_dt();
@@ -102,6 +110,43 @@ void move_and_collide(tilemap *map) {
     }
 }
 
+bool meet_reload_requirements() {
+    return player.ammo_loaded < MAX_AMMO && !reloading && player.ammo_stored > 0 && player.has_weapon;
+}
+
+void check_bullet_collisions(bullet_t *bullet, tilemap *map) {
+    uint32_t tile_count = map->renderer.count / 6;
+    for (uint32_t t = 0; t < tile_count; t++) {
+        if (!map->renderer.collidable[t]) {
+            continue;
+        }
+    
+        vec2f tile_pos = VEC2F(map->renderer.vertices[(uint64_t)t * 6].x, map->renderer.vertices[(uint64_t)t * 6].y);
+    
+        rect_collider bullet_collider = {
+            .pos = bullet->pos,
+            .size = BULLET_SIZE,
+        };
+        rect_collider tile_collider = {
+            .pos = tile_pos,
+            .size = VEC2F(TILE_SIZE, TILE_SIZE),
+        };
+    
+        if (check_collision_rects(bullet_collider, tile_collider)) {
+            bullet->active = false;
+        }
+    }
+}
+
+void update_bullets(int level) {
+    foreach_vec(bullet, bullets) {
+        bullet->pos.x += bullet->velocity.x * get_dt();
+        check_bullet_collisions(bullet, get_level_tilemap(level));
+    }
+
+    vec_erase_if(bullet, bullets, !bullet->active);
+}
+
 void update_player(int level) {
     // Update Animation
     if (anim_timer + anim_dt <= get_time()) {
@@ -110,7 +155,8 @@ void update_player(int level) {
     }
 
     // Set Camera
-    get_cam_2D()->pos.x = player.pos.x + player.collider_pos_off_x + (player.collider_size.x * 0.5f) - ((float)get_screen_width() * 0.5f);
+    get_cam_2D()->pos.x = 
+        player.pos.x + player.collider_pos_off_x + (player.collider_size.x * 0.5f) - (((float)get_screen_width() * (1 / get_cam_2D()->zoom)) * 0.5f);
 
     // Update Key Inputs
     if (is_key_down(KEY_LETTER_A)) {
@@ -125,6 +171,37 @@ void update_player(int level) {
     if (is_key_down(KEY_SPACE) && player.ground) {
         player.velocity.y = -JUMP_FORCE;
         player.ground = false;
+    }
+    if (is_mouse_pressed(MOUSE_BUTTON_LEFT) && player.ammo_loaded > 0 && player.has_weapon) {
+        vec2f bullet_start_pos = 
+            VEC2F(player.pos.x + player.collider_pos_off_x + (player.collider_size.x * 0.5f), player.pos.y + (player.collider_size.y * 0.5f) - 4);
+        vec_push(bullets, (
+            (bullet_t){
+                .pos = bullet_start_pos,
+                .velocity = (player.last_dir_x > 0) ? VEC2F(BULLET_VELOCITY, 0) : VEC2F(-BULLET_VELOCITY, 0),
+                .active = true
+            }));
+        player.ammo_loaded--; 
+    }
+    if (is_key_pressed(KEY_LETTER_R) && meet_reload_requirements()) {
+        reloading = true;
+        reload_timer = get_time();
+    }
+
+    // Reload weapon with delay
+    if (!player.has_weapon) {
+        reloading = false;
+    }
+    if (reloading && reload_timer + reload_dt <= get_time()) {
+        int req_ammo = MAX_AMMO - player.ammo_loaded;
+        if (req_ammo > player.ammo_stored) {
+            player.ammo_loaded += player.ammo_stored;
+            player.ammo_stored = 0;
+        } else {
+            player.ammo_loaded = MAX_AMMO;
+            player.ammo_stored -= req_ammo;
+        }
+        reloading = false;
     }
 
     // toggle player's gun with "g" key
@@ -145,6 +222,12 @@ void update_player(int level) {
     move_and_collide(get_level_tilemap(level));
 }
 
+void draw_bullets() {
+    foreach_vec(bullet, bullets) {
+        draw_rect(bullet->pos, BULLET_SIZE, YELLOW, 0);
+    }
+}
+
 void draw_player() {
     vec2f pivot = VEC2F(player.size.x * 0.25f, player.size.y * 0.25f);
     vec3f rotation = (player.last_dir_x > 0) ? VEC3F(0, 0, 0) : VEC3F(0, 180, 0);
@@ -162,4 +245,8 @@ void hide_gun_player() {
     player.has_weapon = false;
     player.sprite_idx = 0;
     player.sprite_sheet = SPRITE_SHEET_PLAYER_IDLE;
+}
+
+player_t *get_player() {
+    return &player;
 }
