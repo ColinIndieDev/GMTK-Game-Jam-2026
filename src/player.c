@@ -12,6 +12,10 @@ bool reloading = false;
 float reload_timer = 0.0f;
 float reload_dt = 3.0f;
 
+bool can_shoot = true;
+float shoot_timer = 0.0f;
+float shoot_dt = 1.0f;
+
 bullet_t *bullets = NULL;
 
 player_t player = {
@@ -111,7 +115,11 @@ void move_and_collide(tilemap *map) {
 }
 
 bool meet_reload_requirements() {
-    return player.ammo_loaded < MAX_AMMO && !reloading && player.ammo_stored > 0 && player.has_weapon;
+    return player.ammo_loaded < MAX_AMMO && !reloading && player.ammo_stored > 0 && player.has_weapon && can_shoot;
+}
+
+bool meet_shoot_requirements() {
+    return player.ammo_loaded > 0 && player.has_weapon && can_shoot && !reloading;
 }
 
 void check_bullet_collisions(bullet_t *bullet, tilemap *map) {
@@ -172,7 +180,11 @@ void update_player(int level) {
         player.velocity.y = -JUMP_FORCE;
         player.ground = false;
     }
-    if (is_mouse_pressed(MOUSE_BUTTON_LEFT) && player.ammo_loaded > 0 && player.has_weapon) {
+    if (is_key_pressed(KEY_LETTER_R) && meet_reload_requirements()) {
+        reloading = true;
+        reload_timer = get_time();
+    }
+    if (is_mouse_pressed(MOUSE_BUTTON_LEFT) && meet_shoot_requirements()) {
         vec2f bullet_start_pos = 
             VEC2F(player.pos.x + player.collider_pos_off_x + (player.collider_size.x * 0.5f), player.pos.y + (player.collider_size.y * 0.5f) - 4);
         vec_push(bullets, (
@@ -182,11 +194,10 @@ void update_player(int level) {
                 .active = true
             }));
         player.ammo_loaded--; 
+        can_shoot = false;
+        shoot_timer = get_time();
     }
-    if (is_key_pressed(KEY_LETTER_R) && meet_reload_requirements()) {
-        reloading = true;
-        reload_timer = get_time();
-    }
+
 
     // Reload weapon with delay
     if (!player.has_weapon) {
@@ -202,6 +213,11 @@ void update_player(int level) {
             player.ammo_stored -= req_ammo;
         }
         reloading = false;
+    }
+
+    // Delay next shot
+    if (!can_shoot && shoot_timer + shoot_dt <= get_time()) {
+        can_shoot = true;
     }
 
     // toggle player's gun with "g" key
