@@ -17,6 +17,7 @@ sprite_sheet_t sprite_sheets[TOTAL_SPRITE_SHEETS] = {
     MAKE_SPRITE_SHEET(0.00f, "player_jump.png"),
     MAKE_SPRITE_SHEET(0.00f, "player_gunjump.png"),
     MAKE_SPRITE_SHEET(0.25f, "police_batonidle0.png", "police_batonidle1.png"),
+    MAKE_SPRITE_SHEET(0.00f, "dor.png"),
 };
 
 void init_textures() {

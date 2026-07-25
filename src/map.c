@@ -5,6 +5,8 @@
 #define TILEMAP_PATH "assets/images/tilemap.png"
 
 tilemap level_maps[LEVEL_COUNT];
+vec2f finish_positions[LEVEL_COUNT];
+texture finish_flag;
 
 // @Colin every level file has to be "levels/n.txt"
 void load_level_data(int level) {
@@ -15,8 +17,16 @@ void load_level_data(int level) {
         fprintf(stderr, "Cannot find: %s\n", filename);
         exit(-1);
     }
+
+    // first line is the finish flag
+    vec2f pos = VEC2F(0, 0);
+    if (fscanf(file, "%f %f", &pos.x, &pos.y) != 2) {
+        cpl_log(LOG_ERR, "first line has to be valid");
+        return;
+    }
+    finish_positions[level] = pos;
+
     for (;;) {
-        vec2f pos = VEC2F(0, 0);
         if (fscanf(file, "%f %f", &pos.x, &pos.y) != 2) {
             fclose(file);
             return;
@@ -95,6 +105,8 @@ void init_levels() {
         tilemap_check_collidable_tiles(map, VEC2F(TILE_SIZE, TILE_SIZE));
         build_level_map(i);
     }
+
+    texture_load(&finish_flag, "assets/images/dor.png", FILTER_NEAREST);
 }
 
 tilemap *get_level_tilemap(int level) {
@@ -103,4 +115,7 @@ tilemap *get_level_tilemap(int level) {
 
 void draw_level(int level) {
     tilemap_draw(&level_maps[level], WHITE);
+
+    vec2f pivot = VEC2F(0, 0);
+    draw_texture2D(&finish_flag, finish_positions[level], VEC2F(50, 50), WHITE, VEC3F(0, 0, 0), pivot);
 }
