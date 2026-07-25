@@ -6,7 +6,6 @@
 #include <cpstd/vector.h>
 
 float anim_timer = 0.0f;
-float anim_dt = 0.25f;
 
 bool reloading = false;
 float reload_timer = 0.0f;
@@ -168,7 +167,7 @@ void update_bullets(int level) {
 
 void update_player(int *level) {
     // Update Animation
-    if (anim_timer + anim_dt <= get_time()) {
+    if (anim_timer + get_sprite_sheet(player.sprite_sheet)->dt <= get_time()) {
         player.sprite_idx = (player.sprite_idx + 1) % get_sprite_sheet(player.sprite_sheet)->count;
         anim_timer = get_time();
     }
@@ -176,6 +175,8 @@ void update_player(int *level) {
     // Set Camera
     get_cam_2D()->pos.x =
         player.pos.x + player.collider_pos_off_x + (player.collider_size.x * 0.5f) - (((float)get_screen_width() * (1 / get_cam_2D()->zoom)) * 0.5f);
+
+    vec2f old_velocity = player.velocity;
 
     // Update Key Inputs
     if (is_key_down(KEY_LETTER_A)) {
@@ -246,6 +247,16 @@ void update_player(int *level) {
     player.velocity.y += GRAVITY_FORCE * get_dt();
     if (player.velocity.y > MAX_FALL_SPEED) {
         player.velocity.y = MAX_FALL_SPEED;
+    }
+
+    if (old_velocity.x != player.velocity.x) {
+        // player stopped or started walking
+        if (player.velocity.x == 0) {
+            player.sprite_sheet = SPRITE_SHEET_PLAYER_IDLE;
+        } else {
+            player.sprite_sheet = SPRITE_SHEET_PLAYER_WALK;
+        }
+        player.sprite_idx = 0;
     }
 
     // Update Position

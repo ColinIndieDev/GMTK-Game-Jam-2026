@@ -16,6 +16,7 @@ enum {
 
 typedef struct {
     int count;
+    float dt;
     texture textures[MAX_FRAMES_SPRITE_SHEET];
     const char *files[MAX_FRAMES_SPRITE_SHEET];
 } sprite_sheet_t;

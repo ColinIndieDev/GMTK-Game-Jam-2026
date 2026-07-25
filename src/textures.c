@@ -1,18 +1,19 @@
 #include "textures.h"
 
 // clang-format off
-#define MAKE_SPRITE_SHEET(...) ((sprite_sheet_t){ \
+#define MAKE_SPRITE_SHEET(_dt, ...) ((sprite_sheet_t){               \
     .count = sizeof((const char *[]){__VA_ARGS__}) / sizeof(char *), \
-    .files = { __VA_ARGS__ },  })
+    .files = { __VA_ARGS__ },                                        \
+    .dt = _dt,})
 // clang-format on
 
 sprite_sheet_t sprite_sheets[TOTAL_SPRITE_SHEETS] = {
-    MAKE_SPRITE_SHEET("rifle.png"),
-    MAKE_SPRITE_SHEET("bullet.png"),
-    MAKE_SPRITE_SHEET("player_idle0.png", "player_idle1.png"),
-    MAKE_SPRITE_SHEET("player_gunidle0.png", "player_gunidle1.png"),
-    MAKE_SPRITE_SHEET("player_walking0.png", "player_walking1.png", "player_walking2.png", "player_walking3.png"),
-    MAKE_SPRITE_SHEET("police_batonidle0.png", "police_batonidle1.png"),
+    MAKE_SPRITE_SHEET(0.00f, "rifle.png"),
+    MAKE_SPRITE_SHEET(0.00f, "bullet.png"),
+    MAKE_SPRITE_SHEET(0.25f, "player_idle0.png", "player_idle1.png"),
+    MAKE_SPRITE_SHEET(0.25f, "player_gunidle0.png", "player_gunidle1.png"),
+    MAKE_SPRITE_SHEET(0.10f, "player_walking0.png", "player_walking1.png", "player_walking2.png"),
+    MAKE_SPRITE_SHEET(0.25f, "police_batonidle0.png", "police_batonidle1.png"),
 };
 
 void init_textures() {
