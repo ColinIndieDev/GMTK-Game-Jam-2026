@@ -23,6 +23,7 @@ bullet_t *bullets = NULL;
 audio shoot_sfx;
 audio reload_sfx;
 audio gun_draw_sfx;
+audio jump_sfx;
 
 player_t player = {
     .pos = VEC2F(0, 0),
@@ -46,6 +47,7 @@ void init_player() {
     shoot_sfx = audio_load("assets/sounds/shoot.mp3");
     reload_sfx = audio_load("assets/sounds/reload.mp3");
     gun_draw_sfx = audio_load("assets/sounds/gun_draw.mp3");
+    jump_sfx = audio_load("assets/sounds/jump.mp3");
 }
 
 void move_and_collide(tilemap *map) {
@@ -188,6 +190,7 @@ void update_player(int *level) {
     if (is_key_down(KEY_SPACE) && player.ground) {
         player.velocity.y = -JUMP_FORCE;
         player.ground = false;
+        audio_play_sound(&jump_sfx);
     }
     if (is_key_pressed(KEY_LETTER_R) && meet_reload_requirements()) {
         reloading = true;
