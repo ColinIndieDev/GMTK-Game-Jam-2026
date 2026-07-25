@@ -6,3 +6,4 @@ build
 asan*.txt
 lsan*.txt
 ubsan*.txt
+.DS_Store

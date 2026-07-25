@@ -11,7 +11,6 @@ void draw_ui(player_t *player, font *f, int level) {
         draw_texture2D(get_sprite_sheet(SPRITE_SHEET_BULLET)->textures, VEC2F(start_pos.x + (i * 20), start_pos.y), VEC2F(150, 150), color,
                        NO_ROTATION);
     }
-
     begin_draw(TEXT, false);
 
     if (player->ammo_stored > 0) {

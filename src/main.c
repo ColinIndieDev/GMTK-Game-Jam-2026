@@ -24,7 +24,6 @@ int main(void) {
 
     while (!window_should_close()) {
         update();
-
         update_player(&cur_level);
         update_timer();
         update_bullets(cur_level);
@@ -42,7 +41,6 @@ int main(void) {
 
         begin_draw(TEXTURE_2D_UNLIT, false);
         draw_ui(get_player(), &f, cur_level);
-
         end_frame();
     }
     window_close();

@@ -167,16 +167,16 @@ void update_bullets(int level) {
 
 void update_player(int *level) {
     // Update Animation
+    update_sprite_sheet_player();
     if (anim_timer + get_sprite_sheet(player.sprite_sheet)->dt <= get_time()) {
-        player.sprite_idx = (player.sprite_idx + 1) % get_sprite_sheet(player.sprite_sheet)->count;
+        player.sprite_idx += 1;
         anim_timer = get_time();
     }
+    player.sprite_idx %= get_sprite_sheet(player.sprite_sheet)->count;
 
     // Set Camera
     get_cam_2D()->pos.x =
         player.pos.x + player.collider_pos_off_x + (player.collider_size.x * 0.5f) - (((float)get_screen_width() * (1 / get_cam_2D()->zoom)) * 0.5f);
-
-    vec2f old_velocity = player.velocity;
 
     // Update Key Inputs
     if (is_key_down(KEY_LETTER_A)) {
@@ -249,18 +249,22 @@ void update_player(int *level) {
         player.velocity.y = MAX_FALL_SPEED;
     }
 
-    if (old_velocity.x != player.velocity.x) {
-        // player stopped or started walking
-        if (player.velocity.x == 0) {
-            player.sprite_sheet = SPRITE_SHEET_PLAYER_IDLE;
-        } else {
-            player.sprite_sheet = SPRITE_SHEET_PLAYER_WALK;
-        }
-        player.sprite_idx = 0;
-    }
-
     // Update Position
     move_and_collide(get_level_tilemap(*level));
+}
+
+void update_sprite_sheet_player() {
+    // if in the air, is has to be jump
+    if (!player.ground) {
+        player.sprite_sheet = get_with_or_without_gun(SPRITE_SHEET_PLAYER_JUMP);
+        return;
+    }
+
+    if (player.velocity.x == 0) {
+        player.sprite_sheet = get_with_or_without_gun(SPRITE_SHEET_PLAYER_IDLE);
+    } else {
+        player.sprite_sheet = get_with_or_without_gun(SPRITE_SHEET_PLAYER_WALK);
+    }
 }
 
 float get_time_left() {
@@ -286,11 +290,27 @@ void draw_player() {
 
 void toggle_gun_player() {
     player.has_weapon = !player.has_weapon;
-    player.sprite_idx = 0;
-    player.sprite_sheet = player.has_weapon ? SPRITE_SHEET_PLAYER_GUN_IDLE : SPRITE_SHEET_PLAYER_IDLE;
     audio_play_sound(&gun_draw_sfx);
 }
 
 player_t *get_player() {
     return &player;
+}
+
+int get_with_or_without_gun(int sprite) {
+    if (!player.has_weapon) {
+        return sprite;
+    }
+
+    switch (sprite) {
+    case SPRITE_SHEET_PLAYER_IDLE:
+        return SPRITE_SHEET_PLAYER_GUN_IDLE;
+    case SPRITE_SHEET_PLAYER_JUMP:
+        return SPRITE_SHEET_PLAYER_JUMP; // for now
+    case SPRITE_SHEET_PLAYER_WALK:
+        return SPRITE_SHEET_PLAYER_WALK; // for now
+    default:
+        cpl_log(LOG_INFO, "no such option %d", sprite);
+        return -1;
+    }
 }
