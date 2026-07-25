@@ -22,6 +22,7 @@ bullet_t *bullets = NULL;
 
 audio shoot_sfx;
 audio reload_sfx;
+audio gun_draw_sfx;
 
 player_t player = {
     .pos = VEC2F(0, 0),
@@ -44,6 +45,7 @@ void init_player() {
     bullets = vec_init(bullets, 100);
     shoot_sfx = audio_load("assets/sounds/shoot.mp3");
     reload_sfx = audio_load("assets/sounds/reload.mp3");
+    gun_draw_sfx = audio_load("assets/sounds/gun_draw.mp3");
 }
 
 void move_and_collide(tilemap *map) {
@@ -210,11 +212,7 @@ void update_player(int *level) {
     }
     // toggle player's gun with "g" key
     if (is_key_pressed(KEY_LETTER_G)) {
-        if (player.has_weapon) {
-            hide_gun_player();
-        } else {
-            show_gun_player();
-        }
+        toggle_gun_player();
     }
     // player can cycle levels with "l" key
     if (is_key_pressed(KEY_LETTER_L)) {
@@ -272,16 +270,11 @@ void draw_player() {
     draw_texture2D(player_texture, player.pos, player.size, WHITE, rotation, pivot);
 }
 
-void show_gun_player() {
-    player.has_weapon = true;
+void toggle_gun_player() {
+    player.has_weapon = !player.has_weapon;
     player.sprite_idx = 0;
-    player.sprite_sheet = SPRITE_SHEET_PLAYER_GUN_IDLE;
-}
-
-void hide_gun_player() {
-    player.has_weapon = false;
-    player.sprite_idx = 0;
-    player.sprite_sheet = SPRITE_SHEET_PLAYER_IDLE;
+    player.sprite_sheet = player.has_weapon ? SPRITE_SHEET_PLAYER_GUN_IDLE : SPRITE_SHEET_PLAYER_IDLE;
+    audio_play_sound(&gun_draw_sfx);
 }
 
 player_t *get_player() {

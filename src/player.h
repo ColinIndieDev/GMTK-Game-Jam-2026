@@ -42,5 +42,4 @@ float get_time_left();
 void update_timer();
 void draw_player();
 void draw_bullets();
-void show_gun_player();
-void hide_gun_player();
+void toggle_gun_player();
