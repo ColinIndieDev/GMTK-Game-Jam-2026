@@ -10,6 +10,8 @@
 #define BULLET_VELOCITY 1000.0f
 #define BULLET_SIZE VEC2F(15, 5)
 
+#define MAX_TIME_S (15 * 60)
+
 typedef struct {
     vec2f pos;
     vec2f size;
@@ -36,6 +38,8 @@ void init_player();
 player_t *get_player();
 void update_bullets(int level);
 void update_player(int *level);
+float get_time_left();
+void update_timer();
 void draw_player();
 void draw_bullets();
 void show_gun_player();

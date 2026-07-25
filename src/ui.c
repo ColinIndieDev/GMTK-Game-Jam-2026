@@ -1,4 +1,5 @@
 #include "ui.h"
+#include "player.h"
 #include "textures.h"
 #include <cpl/cpl.h>
 
@@ -16,6 +17,8 @@ void draw_ui(player_t *player, font *f, int level) {
     if (player->ammo_stored > 0) {
         draw_text_shadow(f, VEC2F(start_pos.x + (MAX_AMMO * 20) - 5, 80), 1.2f, WHITE, VEC2F(3, 3), BLACK, "+%d", player->ammo_stored);
     }
+
+    draw_text_shadow(f, VEC2F(10, get_screen_height() - 80), 1.7f, WHITE, VEC2F(5, 5), BLACK, "Time left: %.1fs", get_time_left());
 
     draw_text(f, VEC2F(600, 0), 1.2f, BLACK, "Level %d", level);
 }

@@ -14,6 +14,7 @@ int main(void) {
     get_cam_2D()->zoom = 1.75f;
     font f;
     font_load(&f, "assets/fonts/default.ttf", "default", FILTER_NEAREST);
+    audio_init();
 
     init_textures();
     init_player();
@@ -25,6 +26,7 @@ int main(void) {
         update();
 
         update_player(&cur_level);
+        update_timer();
         update_bullets(cur_level);
 
         update_enemy(&e);
@@ -44,4 +46,5 @@ int main(void) {
         end_frame();
     }
     window_close();
+    audio_close();
 }

@@ -16,7 +16,12 @@ bool can_shoot = true;
 float shoot_timer = 0.0f;
 float shoot_dt = 1.0f;
 
+float time_left = MAX_TIME_S;
+
 bullet_t *bullets = NULL;
+
+audio shoot_sfx;
+audio reload_sfx;
 
 player_t player = {
     .pos = VEC2F(0, 0),
@@ -37,6 +42,8 @@ player_t player = {
 void init_player() {
     anim_timer = get_time();
     bullets = vec_init(bullets, 100);
+    shoot_sfx = audio_load("assets/sounds/shoot.mp3");
+    reload_sfx = audio_load("assets/sounds/reload.mp3");
 }
 
 void move_and_collide(tilemap *map) {
@@ -183,6 +190,7 @@ void update_player(int *level) {
     if (is_key_pressed(KEY_LETTER_R) && meet_reload_requirements()) {
         reloading = true;
         reload_timer = get_time();
+        audio_play_sound(&reload_sfx);
     }
     if (is_mouse_pressed(MOUSE_BUTTON_LEFT) && meet_shoot_requirements()) {
         vec2f bullet_start_pos =
@@ -198,6 +206,7 @@ void update_player(int *level) {
         player.ammo_loaded--;
         can_shoot = false;
         shoot_timer = get_time();
+        audio_play_sound(&shoot_sfx);
     }
     // toggle player's gun with "g" key
     if (is_key_pressed(KEY_LETTER_G)) {
@@ -240,6 +249,14 @@ void update_player(int *level) {
 
     // Update Position
     move_and_collide(get_level_tilemap(*level));
+}
+
+float get_time_left() {
+    return time_left;
+}
+
+void update_timer() {
+    time_left -= get_dt();
 }
 
 void draw_bullets() {
