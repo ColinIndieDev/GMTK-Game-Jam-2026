@@ -6,3 +6,4 @@ Cpp11BracedListStyle: false
 ColumnLimit: 150
 SortIncludes: false
 AllowShortEnumsOnASingleLine: false
+AllowShortFunctionsOnASingleLine: false

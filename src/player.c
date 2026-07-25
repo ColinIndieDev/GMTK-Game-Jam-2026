@@ -34,8 +34,8 @@ player_t player = {
     .ground = false,
 };
 
-void init_player() { 
-    anim_timer = get_time(); 
+void init_player() {
+    anim_timer = get_time();
     bullets = vec_init(bullets, 100);
 }
 
@@ -128,9 +128,9 @@ void check_bullet_collisions(bullet_t *bullet, tilemap *map) {
         if (!map->renderer.collidable[t]) {
             continue;
         }
-    
+
         vec2f tile_pos = VEC2F(map->renderer.vertices[(uint64_t)t * 6].x, map->renderer.vertices[(uint64_t)t * 6].y);
-    
+
         rect_collider bullet_collider = {
             .pos = bullet->pos,
             .size = BULLET_SIZE,
@@ -139,7 +139,7 @@ void check_bullet_collisions(bullet_t *bullet, tilemap *map) {
             .pos = tile_pos,
             .size = VEC2F(TILE_SIZE, TILE_SIZE),
         };
-    
+
         if (check_collision_rects(bullet_collider, tile_collider)) {
             bullet->active = false;
         }
@@ -163,7 +163,7 @@ void update_player(int level) {
     }
 
     // Set Camera
-    get_cam_2D()->pos.x = 
+    get_cam_2D()->pos.x =
         player.pos.x + player.collider_pos_off_x + (player.collider_size.x * 0.5f) - (((float)get_screen_width() * (1 / get_cam_2D()->zoom)) * 0.5f);
 
     // Update Key Inputs
@@ -185,19 +185,20 @@ void update_player(int level) {
         reload_timer = get_time();
     }
     if (is_mouse_pressed(MOUSE_BUTTON_LEFT) && meet_shoot_requirements()) {
-        vec2f bullet_start_pos = 
+        vec2f bullet_start_pos =
             VEC2F(player.pos.x + player.collider_pos_off_x + (player.collider_size.x * 0.5f), player.pos.y + (player.collider_size.y * 0.5f) - 4);
+        // clang-format off
         vec_push(bullets, (
             (bullet_t){
                 .pos = bullet_start_pos,
                 .velocity = (player.last_dir_x > 0) ? VEC2F(BULLET_VELOCITY, 0) : VEC2F(-BULLET_VELOCITY, 0),
                 .active = true
             }));
-        player.ammo_loaded--; 
+        // clang-format on
+        player.ammo_loaded--;
         can_shoot = false;
         shoot_timer = get_time();
     }
-
 
     // Reload weapon with delay
     if (!player.has_weapon) {

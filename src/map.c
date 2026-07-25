@@ -52,7 +52,7 @@ void build_level_map(int level) {
         vec2f uv = VEC2F(0, 0);
         if (left && right) {
             uv = VEC2F(1, 0);
-        } else if (down) { 
+        } else if (down) {
             uv = VEC2F(2, 1);
         } else if (up) {
             uv = VEC2F(2, 0);
@@ -94,6 +94,10 @@ void init_levels() {
     build_level_map(LEVEL_0);
 }
 
-tilemap *get_level_tilemap(int level) { return &level_maps[level]; }
+tilemap *get_level_tilemap(int level) {
+    return &level_maps[level];
+}
 
-void draw_level(int level) { tilemap_draw(&level_maps[level], WHITE); }
+void draw_level(int level) {
+    tilemap_draw(&level_maps[level], WHITE);
+}
