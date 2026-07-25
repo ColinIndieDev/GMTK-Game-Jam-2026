@@ -35,7 +35,7 @@ typedef struct {
 void init_player();
 player_t *get_player();
 void update_bullets(int level);
-void update_player(int level);
+void update_player(int *level);
 void draw_player();
 void draw_bullets();
 void show_gun_player();

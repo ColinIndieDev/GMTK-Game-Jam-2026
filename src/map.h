@@ -4,7 +4,7 @@
 
 #define TILE_SIZE 50
 
-#define LEVEL_COUNT 1
+#define LEVEL_COUNT 2
 
 void init_levels();
 tilemap *get_level_tilemap(int level);

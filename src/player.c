@@ -155,7 +155,7 @@ void update_bullets(int level) {
     vec_erase_if(bullet, bullets, !bullet->active);
 }
 
-void update_player(int level) {
+void update_player(int *level) {
     // Update Animation
     if (anim_timer + anim_dt <= get_time()) {
         player.sprite_idx = (player.sprite_idx + 1) % get_sprite_sheet(player.sprite_sheet)->count;
@@ -199,6 +199,18 @@ void update_player(int level) {
         can_shoot = false;
         shoot_timer = get_time();
     }
+    // toggle player's gun with "g" key
+    if (is_key_pressed(KEY_LETTER_G)) {
+        if (player.has_weapon) {
+            hide_gun_player();
+        } else {
+            show_gun_player();
+        }
+    }
+    // player can cycle levels with "l" key
+    if (is_key_pressed(KEY_LETTER_L)) {
+        *level = (*level + 1) % LEVEL_COUNT;
+    }
 
     // Reload weapon with delay
     if (!player.has_weapon) {
@@ -221,22 +233,13 @@ void update_player(int level) {
         can_shoot = true;
     }
 
-    // toggle player's gun with "g" key
-    if (is_key_pressed(KEY_LETTER_G)) {
-        if (player.has_weapon) {
-            hide_gun_player();
-        } else {
-            show_gun_player();
-        }
-    }
-
     player.velocity.y += GRAVITY_FORCE * get_dt();
     if (player.velocity.y > MAX_FALL_SPEED) {
         player.velocity.y = MAX_FALL_SPEED;
     }
 
     // Update Position
-    move_and_collide(get_level_tilemap(level));
+    move_and_collide(get_level_tilemap(*level));
 }
 
 void draw_bullets() {

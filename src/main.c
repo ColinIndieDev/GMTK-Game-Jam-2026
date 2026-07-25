@@ -24,7 +24,7 @@ int main(void) {
     while (!window_should_close()) {
         update();
 
-        update_player(cur_level);
+        update_player(&cur_level);
         update_bullets(cur_level);
 
         update_enemy(&e);
@@ -39,7 +39,7 @@ int main(void) {
         draw_enemy(&e);
 
         begin_draw(TEXTURE_2D_UNLIT, false);
-        draw_ui(get_player(), &f);
+        draw_ui(get_player(), &f, cur_level);
 
         end_frame();
     }
