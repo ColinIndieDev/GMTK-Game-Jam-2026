@@ -23,6 +23,7 @@ audio shoot_sfx;
 audio reload_sfx;
 audio gun_draw_sfx;
 audio jump_sfx;
+audio fahh_sfx;
 
 player_t player = {
     .pos = VEC2F(0, 0),
@@ -47,6 +48,7 @@ void init_player() {
     reload_sfx = audio_load("assets/sounds/reload.mp3");
     gun_draw_sfx = audio_load("assets/sounds/gun_draw.mp3");
     jump_sfx = audio_load("assets/sounds/jump.mp3");
+    fahh_sfx = audio_load("assets/sounds/fahh.mp3");
 }
 
 void move_and_collide(tilemap *map) {
@@ -251,6 +253,16 @@ void update_player(int *level) {
 
     // Update Position
     move_and_collide(get_level_tilemap(*level));
+
+    if (player.pos.y > 1000) {
+        // fallen down = restart level
+        audio_play_sound(&fahh_sfx);
+        player.pos = VEC2F(0, 0);
+        player.velocity = VEC2F(0, 0);
+        player.ammo_stored = MAX_AMMO;
+        player.ammo_loaded = 5;
+        player.has_weapon = false;
+    }
 }
 
 void update_sprite_sheet_player() {
