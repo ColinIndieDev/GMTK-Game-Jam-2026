@@ -306,9 +306,9 @@ int get_with_or_without_gun(int sprite) {
     case SPRITE_SHEET_PLAYER_IDLE:
         return SPRITE_SHEET_PLAYER_GUN_IDLE;
     case SPRITE_SHEET_PLAYER_JUMP:
-        return SPRITE_SHEET_PLAYER_JUMP; // for now
+        return SPRITE_SHEET_PLAYER_GUN_JUMP;
     case SPRITE_SHEET_PLAYER_WALK:
-        return SPRITE_SHEET_PLAYER_WALK; // for now
+        return SPRITE_SHEET_PLAYER_GUN_WALK;
     default:
         cpl_log(LOG_INFO, "no such option %d", sprite);
         return -1;

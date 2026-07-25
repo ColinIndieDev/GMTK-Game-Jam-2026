@@ -13,7 +13,9 @@ sprite_sheet_t sprite_sheets[TOTAL_SPRITE_SHEETS] = {
     MAKE_SPRITE_SHEET(0.25f, "player_idle0.png", "player_idle1.png"),
     MAKE_SPRITE_SHEET(0.25f, "player_gunidle0.png", "player_gunidle1.png"),
     MAKE_SPRITE_SHEET(0.10f, "player_walk0.png", "player_walk1.png", "player_walk2.png"),
+    MAKE_SPRITE_SHEET(0.10f, "player_gunwalk0.png", "player_gunwalk1.png", "player_gunwalk2.png"),
     MAKE_SPRITE_SHEET(0.00f, "player_jump.png"),
+    MAKE_SPRITE_SHEET(0.00f, "player_gunjump.png"),
     MAKE_SPRITE_SHEET(0.25f, "police_batonidle0.png", "police_batonidle1.png"),
 };
 
