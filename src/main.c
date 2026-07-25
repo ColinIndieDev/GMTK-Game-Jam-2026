@@ -30,6 +30,8 @@ int main(void) {
 
         update_enemy(&e);
 
+        update_level(&cur_level);
+
         clear_background(LIGHT_GRAY);
         begin_draw(SHAPE_2D_UNLIT, true);
         draw_bullets();
@@ -40,7 +42,7 @@ int main(void) {
         draw_enemy(&e);
 
         begin_draw(TEXTURE_2D_UNLIT, false);
-        draw_ui(get_player(), &f, cur_level);
+        draw_ui(&f, cur_level);
         end_frame();
     }
     window_close();

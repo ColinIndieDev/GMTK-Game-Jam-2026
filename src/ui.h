@@ -2,4 +2,4 @@
 
 #include "player.h"
 
-void draw_ui(player_t *player, font *f, int level);
+void draw_ui(font *f, int level);

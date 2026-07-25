@@ -5,8 +5,9 @@
 #define TILEMAP_PATH "assets/images/tilemap.png"
 
 tilemap level_maps[LEVEL_COUNT];
-vec2f finish_positions[LEVEL_COUNT];
-texture finish_flag;
+vec2f dor_positions[LEVEL_COUNT];
+texture dor;
+audio victory_sfx;
 
 // @Colin every level file has to be "levels/n.txt"
 void load_level_data(int level) {
@@ -24,7 +25,7 @@ void load_level_data(int level) {
         cpl_log(LOG_ERR, "first line has to be valid");
         return;
     }
-    finish_positions[level] = pos;
+    dor_positions[level] = pos;
 
     for (;;) {
         if (fscanf(file, "%f %f", &pos.x, &pos.y) != 2) {
@@ -106,7 +107,8 @@ void init_levels() {
         build_level_map(i);
     }
 
-    texture_load(&finish_flag, "assets/images/dor.png", FILTER_NEAREST);
+    texture_load(&dor, "assets/images/dor.png", FILTER_NEAREST);
+    victory_sfx = audio_load("assets/sounds/victory.mp3");
 }
 
 tilemap *get_level_tilemap(int level) {
@@ -115,7 +117,23 @@ tilemap *get_level_tilemap(int level) {
 
 void draw_level(int level) {
     tilemap_draw(&level_maps[level], WHITE);
+    draw_texture2D(&dor, dor_positions[level], VEC2F(50, 50), WHITE, VEC3F(0, 0, 0), VEC2F(0, 0));
+}
 
-    vec2f pivot = VEC2F(0, 0);
-    draw_texture2D(&finish_flag, finish_positions[level], VEC2F(50, 50), WHITE, VEC3F(0, 0, 0), pivot);
+void update_level(int *level) {
+    // check collision between player and dor
+    rect_collider player_collider = {
+        .pos = get_player()->pos,
+        .size = get_player()->collider_size,
+    };
+    rect_collider tile_collider = {
+        .pos = dor_positions[*level],
+        .size = VEC2F(TILE_SIZE, TILE_SIZE),
+    };
+
+    if (check_collision_rects(player_collider, tile_collider)) {
+        *level = (*level + 1) % LEVEL_COUNT;
+        get_player()->pos = VEC2F(0, 0);
+        audio_play_sound(&victory_sfx);
+    }
 }
