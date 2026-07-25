@@ -20,19 +20,9 @@ void init_textures() {
         sprite_sheet_t *s = &sprite_sheets[i];
 
         for (uint32_t j = 0; j < s->count; j++) {
-            const char *filename = s->files[j];
-            int filename_len = (int)strlen(filename);
-            int prefix_len = strlen("assets/images/");
-
-            // add prefix "assets/images/"
-            char buf[prefix_len + filename_len + 1];
-            strcpy(buf, "assets/images/");
-            strcpy(buf + prefix_len, filename);
-            buf[prefix_len + strlen(filename)] = '\0';
-
-            // @Yan Why do you print the len of the buffer?
-            // - Sorry I forgot to clean up debug prints
-            texture_load(&s->textures[j], buf, FILTER_NEAREST);
+            char filename[256];
+            sprintf(filename, "assets/images/%s", s->files[j]);
+            texture_load(&s->textures[j], filename, FILTER_NEAREST);
         }
     }
 }

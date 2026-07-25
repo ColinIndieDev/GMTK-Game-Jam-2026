@@ -7,7 +7,7 @@
 #include "enemy.h"
 #include "ui.h"
 
-int cur_level = LEVEL_0;
+int cur_level = 0;
 
 int main(void) {
     window_init(800, 800, "GMTK Game", OPENGL_VER_3_3);

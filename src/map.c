@@ -4,16 +4,15 @@
 
 #define TILEMAP_PATH "assets/images/tilemap.png"
 
-tilemap level_maps[TOTAL_LEVELS];
+tilemap level_maps[LEVEL_COUNT];
 
-const char *level_data_paths[TOTAL_LEVELS] = {
-    "levels/level0.txt",
-};
-
+// @Colin every level file has to be "levels/n.txt"
 void load_level_data(int level) {
-    FILE *file = fopen(level_data_paths[level], "r");
+    char filename[256];
+    sprintf(filename, "levels/%d.txt", level);
+    FILE *file = fopen(filename, "r");
     if (file == NULL) {
-        fprintf(stderr, "Cannot find: %s\n", level_data_paths[level]);
+        fprintf(stderr, "Cannot find: %s\n", filename);
         exit(-1);
     }
     for (;;) {
@@ -86,12 +85,16 @@ void build_level_map(int level) {
 }
 
 void init_levels() {
-    tilemap_create(&level_maps[LEVEL_0], VEC2F(16, 16));
-    tilemap_load_texture(&level_maps[LEVEL_0], TILEMAP_PATH, FILTER_NEAREST);
-    tilemap_begin_editing(&level_maps[LEVEL_0]);
-    load_level_data(LEVEL_0);
-    tilemap_check_collidable_tiles(&level_maps[LEVEL_0], VEC2F(TILE_SIZE, TILE_SIZE));
-    build_level_map(LEVEL_0);
+    for (int i = 0; i < LEVEL_COUNT; i++) {
+        tilemap *map = &level_maps[i];
+
+        tilemap_create(map, VEC2F(16, 16));
+        tilemap_load_texture(map, TILEMAP_PATH, FILTER_NEAREST);
+        tilemap_begin_editing(map);
+        load_level_data(i);
+        tilemap_check_collidable_tiles(map, VEC2F(TILE_SIZE, TILE_SIZE));
+        build_level_map(i);
+    }
 }
 
 tilemap *get_level_tilemap(int level) {
